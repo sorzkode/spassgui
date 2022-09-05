@@ -51,10 +51,15 @@ Click "GO"
 ## Features
 
   Password length of 6 to 15 characters
+  
   Zero to 3 special characters
+  
   Zero to 3 numbers
+  
   Copy button to copy output to your clipboard
+  
   Reset button to clear password field
+  
   Exit button closes the app
 
 
