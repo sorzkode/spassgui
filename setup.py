@@ -8,7 +8,7 @@ setuptools.setup(
     author='sorzkode',
     author_email='<sorzkode@proton.me>',
     packages=setuptools.find_packages(),
-    install_requires=['Pillow', 'clipboard'],
+    install_requires=['Pillow', 'clipboard', 'tkinter'],
     long_description='A random password generator with a tkinter GUI.',
     classifiers=[
         'Programming Language :: Python :: 3',
