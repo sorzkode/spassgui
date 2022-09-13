@@ -31,6 +31,8 @@ Installation isn't required to run the script but you will need to ensure the re
 
   [[clipboard module](https://pypi.org/project/clipboard/)]
 
+  [[tkinter](https://docs.python.org/3/library/tkinter.html)] :: Linux Users
+
 ## Usage
 
 If installed you can use the following command syntax:
