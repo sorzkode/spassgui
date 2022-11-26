@@ -3,7 +3,7 @@
 [[MIT Licence](https://en.wikipedia.org/wiki/MIT_License)]
 
 
-![alt text](https://raw.githubusercontent.com/sorzkode/spassgui/master/assets/splogo.png)
+![alt text](https://raw.githubusercontent.com/sorzkode/spassgui/master/assets/spgit.png)
 
 # Snazzy Pass GUI
 
