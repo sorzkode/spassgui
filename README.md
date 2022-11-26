@@ -7,7 +7,7 @@
 
 # Snazzy Pass GUI
 
-A random password generator with tkinter GUI.
+A random password generator and manager made with PySimpleGUI and SQLite3.
 
 ## Example
 
@@ -27,9 +27,9 @@ Installation isn't required to run the script but you will need to ensure the re
 
   [[Python 3](https://www.python.org/downloads/)]
 
-  [[PIL (Pillow) module](https://pypi.org/project/Pillow/)] 
+  [[PySimpleGUI](https://pypi.org/project/PySimpleGUI/)] 
 
-  [[clipboard module](https://pypi.org/project/clipboard/)]
+  [[pyperclip](https://pypi.org/project/pyperclip3/)]
 
   [[tkinter](https://docs.python.org/3/library/tkinter.html)] :: Linux Users
 
@@ -46,25 +46,40 @@ python spassgui.py
 ```
 
 Once initiated, use the following steps:
-```
-Select your password length
-Select the number of special charactors you want to include
-Selectthe number of digits you want to include
-Click "GO"
+```            
+1. Use the slider to select your password length',
+2. Use the checkboxes to select options for your password',
+3. Click the "Generate" button',
+4. Type in a note to associate with your password and click the "Save" button to save to your local database',
+5. Use the dropdown menus under "Database" to view database items or to delete the database',
 ```
 ## Features
 
-  Password length of 6 to 15 characters
+  Password length of 4 to 50 characters
   
-  Zero to 3 special characters
+  Avoid Ambiguous characters (1,l,0,O)
   
-  Zero to 3 numbers
+  Include / exclude: 
+    uppercase letters
+    lowercase letters
+    numbers
+    special characters
   
   Copy button to copy output to your clipboard
   
-  Reset button to clear password field
+  Reset button to clear fields / reset defaults
+
+  Option to save the password with an associated note to a SQLite database
+    database fields can be queried and or deleted using the "Database" dropdown menu
   
   Exit button closes the app
+
+## Please Note
+
+  Snazzy Pass is a password generator first and foremost
+  The password management functionality is basic and was added in version 2
+  The local snazzy database isn't password protected and contents aren't encrypted or hashed
+  Therefore, application should only be used locally and access to the application should be restricted if you plan to use the database to store passwords
 
 
 
