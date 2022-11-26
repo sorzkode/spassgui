@@ -76,10 +76,13 @@ Once initiated, use the following steps:
 
 ## Please Note
 
-  Snazzy Pass is a password generator first and foremost
-  The password management functionality is basic and was added in version 2
-  The local snazzy database isn't password protected and contents aren't encrypted or hashed
-  Therefore, application should only be used locally and access to the application should be restricted if you plan to use the database to store passwords
+  Snazzy Pass is a password generator first and foremost.
+  
+  The password management functionality is basic and was added in version 2.
+  
+  The local snazzy database isn't password protected and contents aren't encrypted or hashed.
+  
+  Therefore, the application should only be used locally and access to the application should be restricted if you plan to use the database to store passwords
 
 
 
