@@ -31,6 +31,8 @@ Installation isn't required to run the script but you will need to ensure the re
 
   [[pyperclip](https://pypi.org/project/pyperclip3/)]
 
+  [[cryptography]](https://pypi.org/project/cryptography/)]
+
   [[tkinter](https://docs.python.org/3/library/tkinter.html)] :: Linux Users
 
 ## Usage
@@ -76,13 +78,11 @@ Once initiated, use the following steps:
 
 ## Please Note
 
-  Snazzy Pass is a password generator first and foremost.
+  Snazzy Pass is a password generator first and foremost
+
+  The password management functionality is basic and was added in version 2
   
-  The password management functionality is basic and was added in version 2.
-  
-  The local snazzy database isn't password protected and contents aren't encrypted or hashed.
-  
-  Therefore, the application should only be used locally and access to the application should be restricted if you plan to use the database to store passwords
+  The local snazzy database isn't password protected but passwords are encrypted using Fernet
 
 
 

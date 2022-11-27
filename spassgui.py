@@ -33,6 +33,8 @@ import sqlite3
 from tkinter.font import BOLD
 import PySimpleGUI as sg
 import pyperclip as pc
+from cryptography.fernet import Fernet
+from ___ import byte_size
 
 # Database setup
 con = sqlite3.connect("snazzy.db")
@@ -307,11 +309,12 @@ class SnazzyWindow:
 
         final_pass = self.values['-PASSOUTPUT-']
         pass_note = self.values['-PASSNOTE-']
+        encrypted_pass = Fernet(byte_size).encrypt(final_pass.encode())
         cur.execute('''
           CREATE TABLE IF NOT EXISTS snazzy_stuff
           ([pass_notes] TEXT, [passwords] TEXT)
           ''')
-        cur.execute("INSERT INTO snazzy_stuff (pass_notes, passwords) values(?, ?)",(pass_note, final_pass))
+        cur.execute("INSERT INTO snazzy_stuff (pass_notes, passwords) values(?, ?)",(pass_note, encrypted_pass.decode()))
         con.commit()
         sg.popup_ok("Saved to your Database", grab_anywhere=True, keep_on_top=True)
 
@@ -319,9 +322,17 @@ class SnazzyWindow:
 
         '''Queries and outputs all database contents'''
 
-        query_list = []
-        for row in cur.execute("select * from snazzy_stuff"):
-            query_list.append(row)
+        notes_list = []
+        pass_list = []
+
+        for row in cur.execute("select pass_notes from snazzy_stuff"):
+            notes_list.append(row)
+
+        for row in cur.execute("select passwords from snazzy_stuff"):
+            items = bytes(str(row), encoding='UTF-8')
+            decrypted_pass = Fernet(byte_size).decrypt(items)
+            pass_list.append(decrypted_pass)
+
         database_layout = [
             [
                 sg.Text(
@@ -331,10 +342,16 @@ class SnazzyWindow:
             ],
             [
                 sg.Listbox(
-                    query_list,
-                    size=(40,10),
+                    notes_list,
+                    size=(20,10),
                     disabled=True,
-                    key='-DBKEY-'
+                    key='-DBNOTES-'
+                    ),
+                sg.Listbox(
+                    pass_list,
+                    size=(20,10),
+                    disabled=True,
+                    key='-DBPASS-'
                     ),
             ],
         ]
@@ -387,8 +404,7 @@ class SnazzyWindow:
             "",
             "Snazzy Pass is a password generator first and foremost",
             "The password management functionality is basic and was added in version 2",
-            "The local snazzy database isn't password protected and contents aren't encrypted or hashed",
-            "Therefore, it should only be used locally and access to the application should be restricted if you plan to use the database to store passwords",
+            "The local snazzy database isn't password protected but passwords are encrypted using Fernet",
             "",
             f"PySimpleGUI Version: {psversion}",
             "",
