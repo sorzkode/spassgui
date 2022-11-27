@@ -8,7 +8,7 @@ setuptools.setup(
     author='sorzkode',
     author_email='<sorzkode@proton.me>',
     packages=setuptools.find_packages(),
-    install_requires=['pyperclip', 'PySimpleGUI', 'tkinter', 'sqlite3', 'cryptography'],
+    install_requires=['pyperclip', 'PySimpleGUI', 'tkinter', 'cryptography'],
     long_description='A random password generator and manager using PySimpleGUI and SQLite3.',
     classifiers=[
         'Programming Language :: Python :: 3',

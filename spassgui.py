@@ -34,7 +34,7 @@ from tkinter.font import BOLD
 import PySimpleGUI as sg
 import pyperclip as pc
 from cryptography.fernet import Fernet
-from ___ import byte_size
+from ___ import secret_key
 
 # Database setup
 con = sqlite3.connect("snazzy.db")
@@ -309,7 +309,7 @@ class SnazzyWindow:
 
         final_pass = self.values['-PASSOUTPUT-']
         pass_note = self.values['-PASSNOTE-']
-        encrypted_pass = Fernet(byte_size).encrypt(final_pass.encode())
+        encrypted_pass = Fernet(secret_key).encrypt(final_pass.encode())
         cur.execute('''
           CREATE TABLE IF NOT EXISTS snazzy_stuff
           ([pass_notes] TEXT, [passwords] TEXT)
@@ -330,7 +330,7 @@ class SnazzyWindow:
 
         for row in cur.execute("select passwords from snazzy_stuff"):
             items = bytes(str(row), encoding='UTF-8')
-            decrypted_pass = Fernet(byte_size).decrypt(items)
+            decrypted_pass = Fernet(secret_key).decrypt(items)
             pass_list.append(decrypted_pass)
 
         database_layout = [
