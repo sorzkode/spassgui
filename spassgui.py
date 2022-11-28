@@ -30,37 +30,39 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 import random
 import string
 import sqlite3
+import base64
 from tkinter.font import BOLD
 import PySimpleGUI as sg
 import pyperclip as pc
 from cryptography.fernet import Fernet
-from ___ import secret_key
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 # Database setup
-con = sqlite3.connect("snazzy.db")
-cur = con.cursor()
+CON = sqlite3.connect("snazzy.db")
+CUR = CON.cursor()
 
 # PySimpleGUI version info
-psversion = sg.version
+SGVERSION = sg.version
 
 # GUI window theme
 sg.theme("Default1")
 
 # Application dropdown menu
-app_menu = [["&Help", ["&Usage", "&About"]],["&Database", ["&Query All", "&Delete All"]]]
+APP_MENU = [["&Help", ["&Usage", "&About"]],["&Database", ["&Query All", "&Delete All"]]]
 
 # Password characters
-abc_upper = list(string.ascii_uppercase)
-abc_lower = list(string.ascii_lowercase)
-numerical_characters = list(string.digits)
-special_characters = ["!","@","#","$","%","^","&","*","(",")"]
-avoid_ambiguity = ["1","O","l","0"]
+ABC_UPPER = list(string.ascii_uppercase)
+ABC_LOWER = list(string.ascii_lowercase)
+NUMERICAL_CHARACTERS = list(string.digits)
+SPECIAL_CHARACTERS = ["!","@","#","$","%","^","&","*","(",")"]
+AVOID_AMBIGUITY = ["1","O","l","0"]
 
 # All GUI elements
-layout = [
+LAYOUT = [
     [
         sg.Menu(
-            app_menu,
+            APP_MENU,
             tearoff=False,
             key='-MENU-'
             )
@@ -181,13 +183,13 @@ layout = [
             ),
         sg.Button(
             "Save", 
-            font=("Lucida", 12, BOLD), 
+            font=("Lucida", 12, BOLD),
             pad=(5, 15),
             disabled=True
             ),
         sg.Button(
             "Exit", 
-            font=("Lucida", 12, BOLD), 
+            font=("Lucida", 12, BOLD),
             pad=(5, 15)
             ),
     ],
@@ -200,7 +202,7 @@ class SnazzyWindow:
     def __init__(self, window):
         self.window = sg.Window(
             "Snazzy Pass",
-            layout,
+            LAYOUT,
             resizable=True,
             icon="assets\spg.ico",
             grab_anywhere=True,
@@ -236,7 +238,7 @@ class SnazzyWindow:
         '''Application interface defaults'''
 
         self.window['-PASSOUTPUT-'].update("")
-        self.window['-PASSLENGTH-'].update(10)       
+        self.window['-PASSLENGTH-'].update(10)     
         self.window['-CUPPER-'].update(True)
         self.window['-CLOWER-'].update(True)
         self.window['-CNUMBERS-'].update(True)
@@ -252,40 +254,40 @@ class SnazzyWindow:
         '''Generating the password'''
 
         try:
-            generated_pass = []
-            all_characters = []
-            pass_length = int(self.values['-PASSLENGTH-'])
+            GENERATED_PASS = []
+            ALL_CHARACTERS = []
+            PASS_LENGTH = int(self.values['-PASSLENGTH-'])
 
             # checking for pass options
             if self.values['-CUPPER-'] is True:
-                for i in range(pass_length):
-                    all_characters.append(random.choice(abc_upper))
+                for i in range(PASS_LENGTH):
+                    ALL_CHARACTERS.append(random.choice(ABC_UPPER))
            
             if self.values['-CLOWER-'] is True:
-                for i in range(pass_length):
-                    all_characters.append(random.choice(abc_lower))
+                for i in range(PASS_LENGTH):
+                    ALL_CHARACTERS.append(random.choice(ABC_LOWER))
            
             if self.values['-CNUMBERS-'] is True:
-                for i in range(pass_length):
-                    all_characters.append(random.choice(numerical_characters))
+                for i in range(PASS_LENGTH):
+                    ALL_CHARACTERS.append(random.choice(NUMERICAL_CHARACTERS))
            
             if self.values['-CSPECIAL-'] is True:
-                for i in range(pass_length):
-                    all_characters.append(random.choice(special_characters))
+                for i in range(PASS_LENGTH):
+                    ALL_CHARACTERS.append(random.choice(SPECIAL_CHARACTERS))
 
             # Removing ambiguous characters if option is selected
             if self.values['-AMBIGUITY-'] is True:
-                all_characters = [x for x in all_characters if x not in avoid_ambiguity]
+                ALL_CHARACTERS = [x for x in ALL_CHARACTERS if x not in AVOID_AMBIGUITY]
 
             # Finalizng password
-            for i in range(pass_length):
-                generated_pass.append(random.choice(all_characters))
+            for i in range(PASS_LENGTH):
+                GENERATED_PASS.append(random.choice(ALL_CHARACTERS))
 
-            random.shuffle(generated_pass)
-            final_pass = (''.join(generated_pass))
+            random.shuffle(GENERATED_PASS)
+            FINAL_PASS = (''.join(GENERATED_PASS))
 
-            # Updating GUI 
-            self.window['-PASSOUTPUT-'].update(final_pass, disabled=True)
+            # Updating GUI
+            self.window['-PASSOUTPUT-'].update(FINAL_PASS, disabled=True)
             self.window["Copy"].update(disabled=False)
             self.window["Reset"].update(disabled=False)
             self.window["Save"].update(disabled=False)
@@ -299,41 +301,121 @@ class SnazzyWindow:
 
         '''Copying password to clipboard'''
 
-        final_pass = self.values['-PASSOUTPUT-']
-        pc.copy(final_pass)
-        sg.popup_ok("Copied to your clipboard", grab_anywhere=True, keep_on_top=True)
+        FINAL_PASS = self.values['-PASSOUTPUT-']
+        pc.copy(FINAL_PASS)
+        sg.popup_ok(
+            "Copied to your clipboard",
+            grab_anywhere=True,
+            keep_on_top=True
+            )
+    
+    def check_defaults(self):
+
+        '''Checks if default pass and salt exist'''
+
+        # Replacing default password with user selected pass
+        with open('psettings.txt', 'r') as PFILE:
+            SNAZZY_PASSWORD = PFILE.readline()
+            PFILE.close()
+
+        if SNAZZY_PASSWORD == 'snazzypassdefault':
+            try:
+                NEWPASS = sg.popup_get_text(
+                    "Please enter a new password to use Database",
+                    grab_anywhere=True,
+                    keep_on_top=True
+                    )
+                with open('psettings.txt', 'w') as PFILE:
+                    PFILE.write(NEWPASS)
+                    PFILE.close()
+            except Exception as e_message:
+                sg.popup(
+                    f"{e_message}",
+                    grab_anywhere=True,
+                    keep_on_top=True
+                )
+
+        with open('psettings.txt', 'r') as PFILE:
+            SNAZZY_PASSWORD = PFILE.readline()
+            PFILE.close()
+
+        # Replacing default salt with user selected salt
+        with open('ssettings.txt', 'r') as SFILE:
+            SNAZZY_SALT = SFILE.readline()
+            SFILE.close()
+
+        if SNAZZY_SALT == 'snazzysaltdefault':
+            try:
+                NEWSALT = sg.popup_get_text(
+                    "Please enter a new salt (any string of letters) to use Database",
+                    grab_anywhere=True,
+                    keep_on_top=True
+                    )
+                with open('ssettings.txt', 'w') as SFILE:
+                    SFILE.write(NEWSALT)
+                    SFILE.close()
+            except Exception as e_message:
+                sg.popup(
+                    f"{e_message}",
+                    grab_anywhere=True,
+                    keep_on_top=True
+                )
+
+        with open('ssettings.txt', 'r') as SFILE:
+            SNAZZY_SALT = SFILE.readline()
+            SFILE.close()
+        
+        ENCODED_PASSWORD = SNAZZY_PASSWORD.encode()
+        ENCODED_SALT = SNAZZY_SALT.encode()
+
+        KDF = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=ENCODED_SALT,
+            iterations=390000,
+        )
+
+        SECRET_KEY = base64.urlsafe_b64encode(KDF.derive(ENCODED_PASSWORD))
+        return SECRET_KEY
 
     def save_function(self):
 
         '''Saves note and password to database'''
-
-        final_pass = self.values['-PASSOUTPUT-']
-        pass_note = self.values['-PASSNOTE-']
-        encrypted_pass = Fernet(secret_key).encrypt(final_pass.encode())
-        cur.execute('''
+        SECRET_KEY = self.check_defaults()
+        FINAL_PASS = self.values['-PASSOUTPUT-']
+        PASS_NOTE = self.values['-PASSNOTE-']
+        ENCRYPTED_PASS = Fernet(SECRET_KEY).encrypt(FINAL_PASS.encode())
+        CUR.execute('''
           CREATE TABLE IF NOT EXISTS snazzy_stuff
           ([pass_notes] TEXT, [passwords] TEXT)
           ''')
-        cur.execute("INSERT INTO snazzy_stuff (pass_notes, passwords) values(?, ?)",(pass_note, encrypted_pass.decode()))
-        con.commit()
-        sg.popup_ok("Saved to your Database", grab_anywhere=True, keep_on_top=True)
+        CUR.execute(
+            "INSERT INTO snazzy_stuff (pass_notes, passwords) values(?, ?)",
+            (PASS_NOTE, ENCRYPTED_PASS.decode())
+            )
+        CON.commit()
+        sg.popup_ok(
+            "Saved to your Database",
+            grab_anywhere=True,
+            keep_on_top=True
+            )
 
     def db_query(self):
 
         '''Queries and outputs all database contents'''
+        SECRET_KEY = self.check_defaults()
+        NOTES_LIST = []
+        PASS_LIST = []
 
-        notes_list = []
-        pass_list = []
+        for row in CUR.execute("select pass_notes from snazzy_stuff"):
+            NOTES_LIST.append(row)
 
-        for row in cur.execute("select pass_notes from snazzy_stuff"):
-            notes_list.append(row)
+        for row in CUR.execute("select passwords from snazzy_stuff"):
+            ITEMS = bytes(str(row), encoding='UTF-8')
+            DECRYPTED_PASS = Fernet(SECRET_KEY).decrypt(ITEMS)
+            PASS_LIST.append(DECRYPTED_PASS)
 
-        for row in cur.execute("select passwords from snazzy_stuff"):
-            items = bytes(str(row), encoding='UTF-8')
-            decrypted_pass = Fernet(secret_key).decrypt(items)
-            pass_list.append(decrypted_pass)
-
-        database_layout = [
+        DBLAYOUT = [
             [
                 sg.Text(
                     "Your Database Contents:",
@@ -342,13 +424,13 @@ class SnazzyWindow:
             ],
             [
                 sg.Listbox(
-                    notes_list,
+                    NOTES_LIST,
                     size=(20,10),
                     disabled=True,
                     key='-DBNOTES-'
                     ),
                 sg.Listbox(
-                    pass_list,
+                    PASS_LIST,
                     size=(20,10),
                     disabled=True,
                     key='-DBPASS-'
@@ -357,7 +439,7 @@ class SnazzyWindow:
         ]
         sg.Window(
             "Database",
-            database_layout,
+            DBLAYOUT,
             resizable=True,
             icon="assets\spg.ico",
             grab_anywhere=True,
@@ -370,21 +452,21 @@ class SnazzyWindow:
         :param con: Connection to the SQLite database
         :return:
         """
-        warning_message = sg.popup_ok_cancel(
-            "WARNING! This will delete all database contents.", 
+        WARNING_MESSAGE = sg.popup_ok_cancel(
+            "WARNING! This will delete all database contents.",
             grab_anywhere=True, 
             keep_on_top=True
             )
-        if warning_message == "OK":
-            delete_command = 'DELETE FROM snazzy_stuff'
-            cur.execute(delete_command)
-            con.commit()
+        if WARNING_MESSAGE == "OK":
+            DELETE_COMMAND = 'DELETE FROM snazzy_stuff'
+            CUR.execute(DELETE_COMMAND)
+            CON.commit()
             sg.popup(
                 "Database contents deleted",
                 grab_anywhere=True,
                 keep_on_top=True
                 )
-        if warning_message == "Cancel":
+        if WARNING_MESSAGE == "Cancel":
             sg.popup(
                 "Database deletion cancelled",
                 grab_anywhere=True,
@@ -406,7 +488,7 @@ class SnazzyWindow:
             "The password management functionality is basic and was added in version 2",
             "The local snazzy database isn't password protected but passwords are encrypted using Fernet",
             "",
-            f"PySimpleGUI Version: {psversion}",
+            f"PySimpleGUI Version: {SGVERSION}",
             "",
             grab_anywhere=True,
             keep_on_top=True,
@@ -441,7 +523,7 @@ class SnazzyWindow:
 
             # Window closed event
             if self.event == sg.WIN_CLOSED or self.event == "Exit":
-                con.close()
+                CON.close()
                 break
             # Matching events to functions
             match self.event:
