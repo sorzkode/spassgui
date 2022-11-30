@@ -31,7 +31,7 @@ Installation isn't required to run the script but you will need to ensure the re
 
   [[pyperclip](https://pypi.org/project/pyperclip3/)]
 
-  [[cryptography]](https://pypi.org/project/cryptography/)]
+  [[cryptography](https://pypi.org/project/cryptography/)]
 
   [[tkinter](https://docs.python.org/3/library/tkinter.html)] :: Linux Users
 
@@ -49,11 +49,11 @@ python spassgui.py
 
 Once initiated, use the following steps:
 ```            
-1. Use the slider to select your password length',
-2. Use the checkboxes to select options for your password',
-3. Click the "Generate" button',
-4. Type in a note to associate with your password and click the "Save" button to save to your local database',
-5. Use the dropdown menus under "Database" to view database items or to delete the database',
+1. Use the slider to select your password length.
+2. Use the checkboxes to select options for your password.
+3. Click the "Generate" button.
+4. Type in a note to associate with your password and click the "Save" button to save to your local database.
+5. Use the dropdown menus under "Database" to view database items or to delete the database.
 ```
 ## Features
 
@@ -62,17 +62,18 @@ Once initiated, use the following steps:
   Avoid Ambiguous characters (1,l,0,O)
   
   Include / exclude: 
-    uppercase letters
-    lowercase letters
-    numbers
-    special characters
+    -uppercase letters
+    -lowercase letters
+    -numbers
+    -special characters
   
   Copy button to copy output to your clipboard
   
   Reset button to clear fields / reset defaults
 
   Option to save the password with an associated note to a SQLite database
-    database fields can be queried and or deleted using the "Database" dropdown menu
+  
+  Database fields can be queried and or deleted using the "Database" dropdown menu
   
   Exit button closes the app
 
