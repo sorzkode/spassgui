@@ -11,12 +11,12 @@
 A random password generator and manager made with PySimpleGUI and SQLite3.
 -
 Author:
-sorzkode
+Mister Riley
 sorzkode@proton.me
 https://github.com/sorzkode
 
 MIT License
-Copyright (c) 2022 sorzkode
+Copyright (c) 2023 Mister Riley
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
 to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
 and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -58,6 +58,12 @@ NUMERICAL_CHARACTERS = list(string.digits)
 SPECIAL_CHARACTERS = ["!","@","#","$","%","^","&","*","(",")"]
 AVOID_AMBIGUITY = ["1","O","l","0"]
 
+# Defined fonts
+FONT_TITLE = ("Lucida", 14, "bold")
+FONT_LABEL = ("Lucida", 10, "bold")
+FONT_INPUT = ("Lucida", 12, "bold")
+FONT_BUTTON = ("Lucida", 12, "bold")
+
 # All GUI elements
 LAYOUT = [
     [
@@ -65,13 +71,13 @@ LAYOUT = [
             APP_MENU,
             tearoff=False,
             key='-MENU-'
-            )
+        )
     ],
     [
         sg.Image(
-            filename='assets\splogo.png',
+            filename='assets/splogo.png',
             key='-LOGO-'
-            )
+        )
     ],
     [
         sg.StatusBar(
@@ -81,117 +87,122 @@ LAYOUT = [
             background_color='Green',
             enable_events=True,
             key='-SBAR-'
-            )
+        )
     ],
     [
         sg.Text(
             "Password Length:",
-            font=('Lucida', 14, BOLD)
-            ),
+            font=FONT_TITLE
+        ),
         sg.Slider(
-            orientation='horizontal', 
-            range=(4,50),
-            default_value=10, 
-            font=('Lucida', 12, BOLD),
-            text_color='Black', 
+            orientation='horizontal',
+            range=(4, 50),
+            default_value=10,
+            font=FONT_INPUT,
+            text_color='Black',
             pad=(5, 15),
             size=(35, 15),
             enable_events=True,
             key='-PASSLENGTH-',
-            ),
+        ),
     ],
     [
         sg.Text(
             "Password Setup:",
-            font=("Lucida", 10, BOLD)
-            ),
+            font=FONT_LABEL
+        ),
         sg.Checkbox(
-            "Avoid Ambiguity", 
-            default=True, 
-            disabled=False, 
+            "Avoid Ambiguity",
+            default=True,
+            disabled=False,
             key='-AMBIGUITY-',
-            ),
+            font=FONT_LABEL
+        ),
         sg.Checkbox(
-            "UPPER", 
-            default=True, 
-            disabled=False, 
+            "UPPER",
+            default=True,
+            disabled=False,
             key='-CUPPER-',
-            ),
+            font=FONT_LABEL
+        ),
         sg.Checkbox(
-            "lower", 
-            default=True, 
-            disabled=False, 
+            "lower",
+            default=True,
+            disabled=False,
             key='-CLOWER-',
-            ),
+            font=FONT_LABEL
+        ),
         sg.Checkbox(
-            "Numbers", 
-            default=True, 
-            disabled=False, 
+            "Numbers",
+            default=True,
+            disabled=False,
             key='-CNUMBERS-',
-            ),
+            font=FONT_LABEL
+        ),
         sg.Checkbox(
-            "Special", 
-            default=True, 
-            disabled=False, 
+            "Special",
+            default=True,
+            disabled=False,
             key='-CSPECIAL-',
-            ),
+            font=FONT_LABEL
+        ),
     ],
     [
         sg.Text(
             "Password:",
-            font=("Lucida", 10, BOLD)
-            ),
+            font=FONT_LABEL
+        ),
         sg.In(
-            "", 
-            font=("Lucida", 12, BOLD), 
+            "",
+            font=FONT_INPUT,
             pad=(5, 15),
             enable_events=True,
             disabled=True,
             key='-PASSOUTPUT-'
-            ),
+        ),
         sg.Button(
-            "Copy", 
-            font=("Lucida", 12, BOLD), 
-            pad=(5, 15), 
+            "Copy",
+            font=FONT_BUTTON,
+            pad=(5, 15),
             disabled=True
-            ),
+        ),
     ],
     [
         sg.Button(
-            "Generate", 
-            font=("Lucida", 12, BOLD), 
-            pad=(5, 15), 
+            "Generate",
+            font=FONT_BUTTON,
+            pad=(5, 15),
             disabled=False
-            ),
+        ),
         sg.Button(
-            "Reset", 
-            font=("Lucida", 12, BOLD), 
-            pad=(5, 15), 
+            "Reset",
+            font=FONT_BUTTON,
+            pad=(5, 15),
             disabled=True
-            ),
+        ),
         sg.Text(
             "Add Note:",
-            font=("Lucida", 10, BOLD)
-            ),
+            font=FONT_LABEL
+        ),
         sg.In(
-            "", 
-            font=("Lucida", 12, BOLD),
-            size=20, 
+            "",
+            font=FONT_INPUT,
+            size=20,
             enable_events=True,
             disabled=True,
             key='-PASSNOTE-'
-            ),
+        ),
         sg.Button(
-            "Save", 
-            font=("Lucida", 12, BOLD),
+            "Save",
+            font=FONT_BUTTON,
             pad=(5, 15),
             disabled=True
-            ),
+        ),
         sg.Button(
-            "Exit", 
-            font=("Lucida", 12, BOLD),
+            "Exit",
+            font=FONT_BUTTON,
             pad=(5, 15)
-            ),
+        ),
     ],
 ]
 
@@ -381,6 +392,7 @@ class SnazzyWindow:
     def save_function(self):
 
         '''Saves note and password to database'''
+        
         SECRET_KEY = self.check_defaults()
         FINAL_PASS = self.values['-PASSOUTPUT-']
         PASS_NOTE = self.values['-PASSNOTE-']
@@ -403,6 +415,7 @@ class SnazzyWindow:
     def db_query(self):
 
         '''Queries and outputs all database contents'''
+
         SECRET_KEY = self.check_defaults()
         NOTES_LIST = []
         PASS_LIST = []
