@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='spassgui',
-    version='2.0.0',
+    version='3.0.0',
     description='Random password generator and manager.',
     url='https://github.com/sorzkode/',
     author='Mister Riley',

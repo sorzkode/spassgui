@@ -66,19 +66,8 @@ FONT_BUTTON = ("Lucida", 12, "bold")
 
 # All GUI elements
 LAYOUT = [
-    [
-        sg.Menu(
-            APP_MENU,
-            tearoff=False,
-            key='-MENU-'
-        )
-    ],
-    [
-        sg.Image(
-            filename='assets/splogo.png',
-            key='-LOGO-'
-        )
-    ],
+    [sg.Menu(APP_MENU, tearoff=False, key='-MENU-')],
+    [sg.Image(filename='assets/splogo.png', key='-LOGO-')],
     [
         sg.StatusBar(
             "Strong Enough",
@@ -90,10 +79,7 @@ LAYOUT = [
         )
     ],
     [
-        sg.Text(
-            "Password Length:",
-            font=FONT_TITLE
-        ),
+        sg.Text("Password Length:", font=FONT_TITLE),
         sg.Slider(
             orientation='horizontal',
             range=(4, 50),
@@ -107,102 +93,25 @@ LAYOUT = [
         ),
     ],
     [
-        sg.Text(
-            "Password Setup:",
-            font=FONT_LABEL
-        ),
-        sg.Checkbox(
-            "Avoid Ambiguity",
-            default=True,
-            disabled=False,
-            key='-AMBIGUITY-',
-            font=FONT_LABEL
-        ),
-        sg.Checkbox(
-            "UPPER",
-            default=True,
-            disabled=False,
-            key='-CUPPER-',
-            font=FONT_LABEL
-        ),
-        sg.Checkbox(
-            "lower",
-            default=True,
-            disabled=False,
-            key='-CLOWER-',
-            font=FONT_LABEL
-        ),
-        sg.Checkbox(
-            "Numbers",
-            default=True,
-            disabled=False,
-            key='-CNUMBERS-',
-            font=FONT_LABEL
-        ),
-        sg.Checkbox(
-            "Special",
-            default=True,
-            disabled=False,
-            key='-CSPECIAL-',
-            font=FONT_LABEL
-        ),
+        sg.Text("Password Setup:", font=FONT_LABEL),
+        sg.Checkbox("Avoid Ambiguity", default=True, disabled=False, key='-AMBIGUITY-', font=FONT_LABEL),
+        sg.Checkbox("UPPER", default=True, disabled=False, key='-CUPPER-', font=FONT_LABEL),
+        sg.Checkbox("lower", default=True, disabled=False, key='-CLOWER-', font=FONT_LABEL),
+        sg.Checkbox("Numbers", default=True, disabled=False, key='-CNUMBERS-', font=FONT_LABEL),
+        sg.Checkbox("Special", default=True, disabled=False, key='-CSPECIAL-', font=FONT_LABEL),
     ],
     [
-        sg.Text(
-            "Password:",
-            font=FONT_LABEL
-        ),
-        sg.In(
-            "",
-            font=FONT_INPUT,
-            pad=(5, 15),
-            enable_events=True,
-            disabled=True,
-            key='-PASSOUTPUT-'
-        ),
-        sg.Button(
-            "Copy",
-            font=FONT_BUTTON,
-            pad=(5, 15),
-            disabled=True
-        ),
+        sg.Text("Password:", font=FONT_LABEL),
+        sg.In("", font=FONT_INPUT, pad=(5, 15), enable_events=True, disabled=True, key='-PASSOUTPUT-'),
+        sg.Button("Copy", font=FONT_BUTTON, pad=(5, 15), disabled=True),
     ],
     [
-        sg.Button(
-            "Generate",
-            font=FONT_BUTTON,
-            pad=(5, 15),
-            disabled=False
-        ),
-        sg.Button(
-            "Reset",
-            font=FONT_BUTTON,
-            pad=(5, 15),
-            disabled=True
-        ),
-        sg.Text(
-            "Add Note:",
-            font=FONT_LABEL
-        ),
-        sg.In(
-            "",
-            font=FONT_INPUT,
-            size=20,
-            enable_events=True,
-            disabled=True,
-            key='-PASSNOTE-'
-        ),
-        sg.Button(
-            "Save",
-            font=FONT_BUTTON,
-            pad=(5, 15),
-            disabled=True
-        ),
-        sg.Button(
-            "Exit",
-            font=FONT_BUTTON,
-            pad=(5, 15)
-        ),
+        sg.Button("Generate", font=FONT_BUTTON, pad=(5, 15), disabled=False),
+        sg.Button("Reset", font=FONT_BUTTON, pad=(5, 15), disabled=True),
+        sg.Text("Add Note:", font=FONT_LABEL),
+        sg.In("", font=FONT_INPUT, size=20, enable_events=True, disabled=True, key='-PASSNOTE-'),
+        sg.Button("Save", font=FONT_BUTTON, pad=(5, 15), disabled=True),
+        sg.Button("Exit", font=FONT_BUTTON, pad=(5, 15)),
     ],
 ]
 
@@ -222,27 +131,23 @@ class SnazzyWindow:
         self.start()
 
     def pass_strength(self):
-
         '''Updating status bar based on password length'''
-
-        pass_value = self.values['-PASSLENGTH-']
-        if pass_value in range(4,6,1):
-            self.window['-SBAR-'].update("Why so weak?", background_color='Red')
-
-        if pass_value in range(7,9,1):
-            self.window['-SBAR-'].update("A little better...", background_color='Orange')
-
-        if pass_value in range(10,15,1):
-            self.window['-SBAR-'].update("Strong enough", background_color='Green')
-
-        if pass_value in range(16,35,1):
-            self.window['-SBAR-'].update("You must workout ;)", background_color='Green')
-
-        if pass_value in range(36,49,1):
-            self.window['-SBAR-'].update("Steroid Alert!", background_color='Green')
-
-        if pass_value == 50:
-            self.window['-SBAR-'].update("HERCULEAN!", background_color='Blue')
+        try:
+            pass_value = self.values['-PASSLENGTH-']
+            if pass_value in range(4, 6, 1):
+                self.window['-SBAR-'].update("Why so weak?", background_color='Red')
+            elif pass_value in range(7, 9, 1):
+                self.window['-SBAR-'].update("A little better...", background_color='Orange')
+            elif pass_value in range(10, 15, 1):
+                self.window['-SBAR-'].update("Strong enough", background_color='Green')
+            elif pass_value in range(16, 35, 1):
+                self.window['-SBAR-'].update("You must workout ;)", background_color='Green')
+            elif pass_value in range(36, 49, 1):
+                self.window['-SBAR-'].update("Steroid Alert!", background_color='Green')
+            elif pass_value == 50:
+                self.window['-SBAR-'].update("HERCULEAN!", background_color='Blue')
+        except Exception as e:
+            print(f"Error occurred in pass_strength: {e}")
 
     def reset_defaults(self):
 
@@ -261,9 +166,7 @@ class SnazzyWindow:
         self.window["Save"].update(disabled=True)
 
     def generate_pass(self):
-
         '''Generating the password'''
-
         try:
             GENERATED_PASS = []
             ALL_CHARACTERS = []
@@ -290,12 +193,15 @@ class SnazzyWindow:
             if self.values['-AMBIGUITY-'] is True:
                 ALL_CHARACTERS = [x for x in ALL_CHARACTERS if x not in AVOID_AMBIGUITY]
 
-            # Finalizng password
+            # Finalizing password
+            if len(ALL_CHARACTERS) == 0:
+                raise ValueError("No password options selected")
+
             for i in range(PASS_LENGTH):
                 GENERATED_PASS.append(random.choice(ALL_CHARACTERS))
 
             random.shuffle(GENERATED_PASS)
-            FINAL_PASS = (''.join(GENERATED_PASS))
+            FINAL_PASS = ''.join(GENERATED_PASS)
 
             # Updating GUI
             self.window['-PASSOUTPUT-'].update(FINAL_PASS, disabled=True)
@@ -304,41 +210,40 @@ class SnazzyWindow:
             self.window["Save"].update(disabled=False)
             self.window['-PASSNOTE-'].update(disabled=False)
 
-        except Exception as e_message:
-            sg.popup(f"{e_message} - try again", grab_anywhere=True, keep_on_top=True)
-            return
+        except ValueError as ve:
+            sg.popup(f"Error: {ve}", grab_anywhere=True, keep_on_top=True)
+        except Exception as e:
+            sg.popup(f"An error occurred: {e}", grab_anywhere=True, keep_on_top=True)
    
     def copy_pass(self):
-
         '''Copying password to clipboard'''
-
-        FINAL_PASS = self.values['-PASSOUTPUT-']
-        pc.copy(FINAL_PASS)
-        sg.popup_ok(
-            "Copied to your clipboard",
-            grab_anywhere=True,
-            keep_on_top=True
+        try:
+            FINAL_PASS = self.values['-PASSOUTPUT-']
+            pc.copy(FINAL_PASS)
+            sg.popup_ok(
+                "Copied to your clipboard",
+                grab_anywhere=True,
+                keep_on_top=True
             )
+        except Exception as e:
+            sg.popup(f"An error occurred while copying the password: {e}", grab_anywhere=True, keep_on_top=True)
     
     def check_defaults(self):
-
         '''Checks if default pass and salt exist'''
 
         # Replacing default password with user selected pass
         with open('psettings.txt', 'r') as PFILE:
-            SNAZZY_PASSWORD = PFILE.readline()
-            PFILE.close()
-
+            SNAZZY_PASSWORD = PFILE.readline().strip()
+        
         if SNAZZY_PASSWORD == 'snazzypassdefault':
             try:
                 NEWPASS = sg.popup_get_text(
                     "Please enter a new password to use Database",
                     grab_anywhere=True,
                     keep_on_top=True
-                    )
+                )
                 with open('psettings.txt', 'w') as PFILE:
                     PFILE.write(NEWPASS)
-                    PFILE.close()
             except Exception as e_message:
                 sg.popup(
                     f"{e_message}",
@@ -347,13 +252,11 @@ class SnazzyWindow:
                 )
 
         with open('psettings.txt', 'r') as PFILE:
-            SNAZZY_PASSWORD = PFILE.readline()
-            PFILE.close()
+            SNAZZY_PASSWORD = PFILE.readline().strip()
 
         # Replacing default salt with user selected salt
         with open('ssettings.txt', 'r') as SFILE:
-            SNAZZY_SALT = SFILE.readline()
-            SFILE.close()
+            SNAZZY_SALT = SFILE.readline().strip()
 
         if SNAZZY_SALT == 'snazzysaltdefault':
             try:
@@ -361,10 +264,9 @@ class SnazzyWindow:
                     "Please enter a new salt (any string of letters) to use Database",
                     grab_anywhere=True,
                     keep_on_top=True
-                    )
+                )
                 with open('ssettings.txt', 'w') as SFILE:
                     SFILE.write(NEWSALT)
-                    SFILE.close()
             except Exception as e_message:
                 sg.popup(
                     f"{e_message}",
@@ -373,9 +275,8 @@ class SnazzyWindow:
                 )
 
         with open('ssettings.txt', 'r') as SFILE:
-            SNAZZY_SALT = SFILE.readline()
-            SFILE.close()
-        
+            SNAZZY_SALT = SFILE.readline().strip()
+
         ENCODED_PASSWORD = SNAZZY_PASSWORD.encode()
         ENCODED_SALT = SNAZZY_SALT.encode()
 
@@ -392,72 +293,63 @@ class SnazzyWindow:
     def save_function(self):
 
         '''Saves note and password to database'''
-        
-        SECRET_KEY = self.check_defaults()
-        FINAL_PASS = self.values['-PASSOUTPUT-']
-        PASS_NOTE = self.values['-PASSNOTE-']
-        ENCRYPTED_PASS = Fernet(SECRET_KEY).encrypt(FINAL_PASS.encode())
-        CUR.execute('''
-          CREATE TABLE IF NOT EXISTS snazzy_stuff
-          ([pass_notes] TEXT, [passwords] TEXT)
-          ''')
-        CUR.execute(
-            "INSERT INTO snazzy_stuff (pass_notes, passwords) values(?, ?)",
-            (PASS_NOTE, ENCRYPTED_PASS.decode())
+
+        try:
+            SECRET_KEY = self.check_defaults()
+            FINAL_PASS = self.values['-PASSOUTPUT-']
+            PASS_NOTE = self.values['-PASSNOTE-']
+            ENCRYPTED_PASS = Fernet(SECRET_KEY).encrypt(FINAL_PASS.encode())
+            CUR.execute('''
+              CREATE TABLE IF NOT EXISTS snazzy_stuff
+              ([pass_notes] TEXT, [passwords] TEXT)
+              ''')
+            CUR.execute(
+                "INSERT INTO snazzy_stuff (pass_notes, passwords) values(?, ?)",
+                (PASS_NOTE, ENCRYPTED_PASS.decode())
             )
-        CON.commit()
-        sg.popup_ok(
-            "Saved to your Database",
-            grab_anywhere=True,
-            keep_on_top=True
+            CON.commit()
+            sg.popup_ok(
+                "Saved to your Database",
+                grab_anywhere=True,
+                keep_on_top=True
             )
+        except Exception as e:
+            sg.popup_error(f"An error occurred while saving to the database: {str(e)}")
 
     def db_query(self):
-
         '''Queries and outputs all database contents'''
+        try:
+            SECRET_KEY = self.check_defaults()
+            NOTES_LIST = []
+            PASS_LIST = []
 
-        SECRET_KEY = self.check_defaults()
-        NOTES_LIST = []
-        PASS_LIST = []
+            for row in CUR.execute("select pass_notes from snazzy_stuff"):
+                NOTES_LIST.append(row)
 
-        for row in CUR.execute("select pass_notes from snazzy_stuff"):
-            NOTES_LIST.append(row)
+            for row in CUR.execute("select passwords from snazzy_stuff"):
+                ITEMS = bytes(str(row), encoding='UTF-8')
+                DECRYPTED_PASS = Fernet(SECRET_KEY).decrypt(ITEMS)
+                PASS_LIST.append(DECRYPTED_PASS)
 
-        for row in CUR.execute("select passwords from snazzy_stuff"):
-            ITEMS = bytes(str(row), encoding='UTF-8')
-            DECRYPTED_PASS = Fernet(SECRET_KEY).decrypt(ITEMS)
-            PASS_LIST.append(DECRYPTED_PASS)
-
-        DBLAYOUT = [
-            [
-                sg.Text(
-                    "Your Database Contents:",
-                    font=('Lucida', 14, BOLD)
-                    ),
-            ],
-            [
-                sg.Listbox(
-                    NOTES_LIST,
-                    size=(20,10),
-                    disabled=True,
-                    key='-DBNOTES-'
-                    ),
-                sg.Listbox(
-                    PASS_LIST,
-                    size=(20,10),
-                    disabled=True,
-                    key='-DBPASS-'
-                    ),
-            ],
-        ]
-        sg.Window(
-            "Database",
-            DBLAYOUT,
-            resizable=True,
-            icon="assets\spg.ico",
-            grab_anywhere=True,
-            keep_on_top=True,
-        ).read(close=True)
+            DBLAYOUT = [
+                [
+                    sg.Text("Your Database Contents:", font=(FONT_TITLE)),
+                ],
+                [
+                    sg.Listbox(NOTES_LIST, size=(20,10), disabled=True, key='-DBNOTES-'),
+                    sg.Listbox(PASS_LIST, size=(20,10), disabled=True, key='-DBPASS-'),
+                ],
+            ]
+            sg.Window(
+                "Database",
+                DBLAYOUT,
+                resizable=True,
+                icon="assets\spg.ico",
+                grab_anywhere=True,
+                keep_on_top=True,
+            ).read(close=True)
+        except Exception as e:
+            sg.popup_error(f"An error occurred while querying the database: {str(e)}")
 
     def delete_db(self):
         """
@@ -465,31 +357,32 @@ class SnazzyWindow:
         :param con: Connection to the SQLite database
         :return:
         """
-        WARNING_MESSAGE = sg.popup_ok_cancel(
-            "WARNING! This will delete all database contents.",
-            grab_anywhere=True, 
-            keep_on_top=True
+        try:
+            WARNING_MESSAGE = sg.popup_ok_cancel(
+                "WARNING! This will delete all database contents.",
+                grab_anywhere=True,
+                keep_on_top=True
             )
-        if WARNING_MESSAGE == "OK":
-            DELETE_COMMAND = 'DELETE FROM snazzy_stuff'
-            CUR.execute(DELETE_COMMAND)
-            CON.commit()
-            sg.popup(
-                "Database contents deleted",
-                grab_anywhere=True,
-                keep_on_top=True
+            if WARNING_MESSAGE == "OK":
+                DELETE_COMMAND = 'DELETE FROM snazzy_stuff'
+                CUR.execute(DELETE_COMMAND)
+                CON.commit()
+                sg.popup(
+                    "Database contents deleted",
+                    grab_anywhere=True,
+                    keep_on_top=True
                 )
-        if WARNING_MESSAGE == "Cancel":
-            sg.popup(
-                "Database deletion cancelled",
-                grab_anywhere=True,
-                keep_on_top=True
+            elif WARNING_MESSAGE == "Cancel":
+                sg.popup(
+                    "Database deletion cancelled",
+                    grab_anywhere=True,
+                    keep_on_top=True
                 )
+        except Exception as e:
+            sg.popup_error(f"An error occurred while deleting the database: {str(e)}")
 
     def about_gui(self):
-
         '''About menu item'''
-
         sg.popup(
             "A random password generator and manager.",
             "",
